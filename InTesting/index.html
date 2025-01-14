@@ -10,8 +10,8 @@
 
 <h2>Loot map assitant<br>
 This is an unofficial map at the moment.<br>
-Version : S0.8 TEST
 Map : Ininity2</h2>
+
 
 <h2>Markers</h2><a id="marker_deeds" href="#" onclick="toggle_markers('deeds'); return false" class="selected">
 <span></span> Deeds</a><div class="sub"><a id="marker_deeds_solo" href="#" onclick="toggle_markers('deeds_solo'); return false" class="selected">
@@ -48,13 +48,16 @@ Map : Ininity2</h2>
 <div class="div"></div><h2>Loot Map Assistant</h2>
 <div class="sub">
     <h6>
+
         <label for="gpsstring">GPS : </label><br>
         <input type="text" id="gpsstring" name="gpsstring"><br>
         <label for="eventstring">Event Message : </label><br>
         <input type="text" id="eventstring" name="eventstring"><br>
-        <button onclick="LSA(gpsstring.value,eventstring.value);document.getElementById('gpsstring').value ='';document.getElementById('eventstring').value =''" ><b>Draw it for me</b></button> 
-        <button onclick="LSAClearFunc()" ><b>Clear the Drawings</b></button>
+        <button onclick="LSA(gpsstring.value,eventstring.value);document.getElementById('gpsstring').value ='';document.getElementById('eventstring').value =''" ><b>Draw it</b></button>
+        &nbsp;&nbsp;&nbsp;
+        <button onclick="LSAClearFunc()" ><b>Clear</b></button>
     </h6>
+    <a href="https://sklotopolis.freeforums.net/thread/6886/loot-little-guide-treasure-hunting" target="_blank" class="small">Distance Guide</a>
 </div>
 
 <!-- end of LSA STUFF -->
