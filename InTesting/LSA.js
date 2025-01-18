@@ -42,8 +42,17 @@
 
 
 //
+
+/// Edit this to your maps size.
+var LSAmapsize = 4096
+
 var LSACountLine = [] ; //used to count the number of LSA Line draws
 var LSACountPoly = [] ; //used to count the number of LSA Poly draws
+
+
+var LSAdirection;
+var LSAmin;
+var LSAmax;
 
 //main function
 //translate ingame event message to a direction and distance
@@ -52,28 +61,26 @@ function LSA (gpsmessage,eventmessage)
 	//x and y is ar read from gpsmessage
 	//other values are read from eventmessage
 	let eventstr = eventmessage;
-	var LSAdirection = 0;
-	var LSAmin = 0;
-	var LSAmax = 0;
+	
 	
 		//get direction from eventmessage
 		//Note the order is odd due to the fact that that some eventstrings contain the same words
 		if (eventstr.includes("ahead of you to the right")==true){
-			LSAdirection=1;
+			LSAdirection="NE";
 		}else if (eventstr.includes("behind you to the right")==true){
-			LSAdirection=3;
+			LSAdirection="SE";
 		}else if (eventstr.includes("behind you to the left")==true){
-			LSAdirection=5;
+			LSAdirection="SW";
 		}else if (eventstr.includes("ahead of you to the left")==true){
-			LSAdirection=7;
+			LSAdirection="NW";
 		}else if (eventstr.includes("in front of you")==true){
-			LSAdirection=0;
+			LSAdirection="N";
 		}else if (eventstr.includes("right of you")==true){
-			LSAdirection=2;
+			LSAdirection="E";
 		}else if (eventstr.includes("behind you")==true){
-			LSAdirection=4;
+			LSAdirection="S";
 		}else if (eventstr.includes("left of you")==true){
-			LSAdirection=6;
+			LSAdirection="W";
 		}
 		
 		//get distance from eventmessage
@@ -143,14 +150,14 @@ function LSAArchcalc (LSAgpsx,LSAgpsy,LSAdirection,LSAmin,LSAmax)
 7	225 - NW
 */
 
-if (LSAdirection==0) { LSAarchdeg=270; }
-else if (LSAdirection==1) { LSAarchdeg=315; }
-else if (LSAdirection==2) { LSAarchdeg=0; }
-else if (LSAdirection==3) { LSAarchdeg=45; }
-else if (LSAdirection==4) { LSAarchdeg=90; }
-else if (LSAdirection==5) { LSAarchdeg=135; }
-else if (LSAdirection==6) { LSAarchdeg=180; }
-else if (LSAdirection==7) { LSAarchdeg=225; }
+if (LSAdirection=="N") { LSAarchdeg=270; }
+else if (LSAdirection=="NE") { LSAarchdeg=315; }
+else if (LSAdirection=="E") { LSAarchdeg=0; }
+else if (LSAdirection=="SE") { LSAarchdeg=45; }
+else if (LSAdirection=="S") { LSAarchdeg=90; }
+else if (LSAdirection=="SW") { LSAarchdeg=135; }
+else if (LSAdirection=="W") { LSAarchdeg=180; }
+else if (LSAdirection=="NW") { LSAarchdeg=225; }
 
 LSADraw (LSAgpsx,LSAgpsy,LSAarchdeg,LSAmin,LSAmax)	
 }
@@ -163,6 +170,12 @@ var LSAOriginY = LSAgpsy;
 var LSAarchdegA = LSAarchdeg - 22.5; // angle of A line from centre
 var LSAarchdegB = LSAarchdeg + 22.5;  // angle of B line from centre
 // convert degrees to radians
+
+var LSAcenterX = LSAOriginX + ((LSAmax-LSAmin)/2) * Math.cos(LSAarchdeg * Math.PI / 180);
+var LSAcenterY = LSAOriginY + ((LSAmax-LSAmin)/2) * Math.sin(LSAarchdeg * Math.PI / 180);
+LSAcenterX = LSAcenterX.toFixed(0);
+LSAcenterY = LSAcenterY.toFixed(0);
+
 var LSAminAX = LSAOriginX + LSAmin * Math.cos(LSAarchdegA * Math.PI / 180);
 var LSAminAY = LSAOriginY + LSAmin * Math.sin(LSAarchdegA * Math.PI / 180);
 var LSAmaxAX = LSAOriginX + LSAmax * Math.cos(LSAarchdegA * Math.PI / 180);
@@ -173,21 +186,37 @@ var LSAmaxBX = LSAOriginX + LSAmax * Math.cos(LSAarchdegB * Math.PI / 180);
 var LSAmaxBY = LSAOriginY + LSAmax * Math.sin(LSAarchdegB * Math.PI / 180);
 
 
-/*-
-//draws the lines and orgin dot on the map
-//REMEMBER to send the color value too
-LSADrawline (LSAOriginX,LSAOriginY,LSAOriginX+1,LSAOriginY+1,"#FF0000"); //start point
-LSADrawline (LSAminAX,LSAminAY,LSAmaxAX,LSAmaxAY,"#2196f3"); //side A
-LSADrawline (LSAminBX,LSAminBY,LSAmaxBX,LSAmaxBY,"#2196f3"); //side B
-LSADrawline (LSAminAX,LSAminAY,LSAminBX,LSAminBY,"#FFC300"); //Connect mins
-LSADrawline (LSAmaxAX,LSAmaxAY,LSAmaxBX,LSAmaxBY,"#FFC300"); //Connect mins
-*/
-//draws the lines and orgin dot on the map 
-// REMEMBER to send the color value too
-LSADrawline (LSAOriginX,LSAOriginY,LSAOriginX+1,LSAOriginY+1,"#FF0000"); //start point
+var LSAOutputstring ="";
 
-//draws the polygon for the search area
-LSAPolygon (LSAminAX,LSAminAY,LSAminBX,LSAminBY,LSAmaxAX,LSAmaxAY,LSAmaxBX,LSAmaxBY,"#2196f3","#FF0000"); //draw the polygon
+// LSA report back , gives feedback to below the buttons on sidebar //
+if (LSAminAX < 0 || LSAminAX > LSAmapsize || LSAminAY < 0 || LSAminAY > LSAmapsize || LSAmaxAX < 0 || LSAmaxAX > LSAmapsize || LSAmaxAY < 0 || LSAmaxAY > LSAmapsize || LSAminBX < 0 || LSAminBX > LSAmapsize || LSAminBY < 0 || LSAminBY > LSAmapsize || LSAmaxBX < 0 || LSAmaxBX > LSAmapsize || LSAmaxBY < 0 || LSAmaxBY > LSAmapsize || LSAOriginX < 0 || LSAOriginX > LSAmapsize || LSAOriginY < 0 || LSAOriginY > LSAmapsize)
+	{
+		LSAOutputstring = LSAOutputstring.concat("The area you need to look in has a part that is off the map, Please move ", LSAdirection," to get closer to  X: " , LSAcenterX , " Y: " , LSAcenterY , " and try again.");
+				document.getElementById("LSARO").innerHTML = LSAOutputstring;
+	}
+
+else if(LSAdirection == null || LSAmin == null || LSAmax == null)
+	{
+		LSAOutputstring = "Information typed in, is incorrect, check what you pasted in";
+		console.log("LSAREPORT : Information typed in , is incorrect , check what you pasted in");
+		document.getElementById("LSARO").innerHTML = LSAOutputstring;
+	}
+else
+	{
+	//draws the lines and orgin dot on the map 
+	// REMEMBER to send the color value too
+	LSADrawline (LSAOriginX,LSAOriginY,LSAOriginX+1,LSAOriginY+1,"#FF0000"); //start point
+
+	//draws the polygon for the search area
+	LSAPolygon (LSAminAX,LSAminAY,LSAminBX,LSAminBY,LSAmaxAX,LSAmaxAY,LSAmaxBX,LSAmaxBY,"#2196f3","#FF0000"); //draw the polygon
+
+	LSAOutputstring = LSAOutputstring.concat("Area has been drawn without issue, check the map.", " The centre of the added area is X: " , LSAcenterX , " Y: " , LSAcenterY);
+
+	console.log("LSAREPORT : Area has been drawn without issue, check the map.");
+
+	document.getElementById("LSARO").innerHTML = LSAOutputstring;
+
+	}
 }
 
 
@@ -282,4 +311,8 @@ function LSAClearFunc() {
 			}
 			LSACountLine.length = 0;
 			LSACountPoly.length = 0;
+
+			LSAOutputstring = "Map has been cleared, ready for next loot map?";
+			console.log("LSAREPORT : Map cleared.");
+			document.getElementById("LSARO").innerHTML = LSAOutputstring;
   }

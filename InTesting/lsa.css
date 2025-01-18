@@ -4,6 +4,15 @@
     margin: 4px 2px;
     padding: 5px 5px;
  }
+ #sidebar .sub input[name="LSARO"] { 
+  border: 0px ;
+  font-size: 13px;
+  margin: 4px 2px;
+  padding: 5px 5px;
+}
+
+
+
  #sidebar .sub button {
   border: none;
   color: rgb(250, 0, 0);

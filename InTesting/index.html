@@ -8,10 +8,12 @@
 <div id="map"></div><div id="coords"><span id="coordsc">Mouse cursor at X0, Y0</span></div>
 <a id="sidebartoggle" href="#" onclick="toggle_sidebar(); return false">&#x2261;</a><div id="sidebar">
 
-<h2>Loot map assitant<br>
-This is an unofficial map at the moment.<br>
-Map : Ininity2</h2>
-
+<!-- start of LSA STUFF 1 / 3 --> 
+<h2><b>LOOT MAP ASSITANT</b><br>
+<i>This is an unofficial map addon</i><br>
+Map : Ininity2 &nbsp; &nbsp; &nbsp;LMA build : S0.8.4
+</h2>
+<!-- end of LSA STUFF 1 / 3 -->
 
 <h2>Markers</h2><a id="marker_deeds" href="#" onclick="toggle_markers('deeds'); return false" class="selected">
 <span></span> Deeds</a><div class="sub"><a id="marker_deeds_solo" href="#" onclick="toggle_markers('deeds_solo'); return false" class="selected">
@@ -41,7 +43,7 @@ Map : Ininity2</h2>
 <a href="#" onclick="show_add_form('report'); return false" class="small report">Report wrong location data</a>
 -->
 
-<!-- start of LSA STUFF -->
+<!-- start of LSA STUFF 2 / 3 -->
 <link rel="stylesheet" href="lsa.css"> 
 <script type="text/javascript" src="LSA.js"></script> <!--need a copy if self hosted -->
 
@@ -53,23 +55,35 @@ Map : Ininity2</h2>
         <input type="text" id="gpsstring" name="gpsstring"><br>
         <label for="eventstring">Event Message : </label><br>
         <input type="text" id="eventstring" name="eventstring"><br>
-        <button onclick="LSA(gpsstring.value,eventstring.value);document.getElementById('gpsstring').value ='';document.getElementById('eventstring').value =''" ><b>Draw it</b></button>
+        <button onclick="LSA(gpsstring.value,eventstring.value);document.getElementById('gpsstring').value ='';document.getElementById('eventstring').value ='';document.getElementById('LSARO').value ='';" ><b>Draw it</b></button>
         &nbsp;&nbsp;&nbsp;
-        <button onclick="LSAClearFunc()" ><b>Clear</b></button>
-    </h6>
-    <a href="https://sklotopolis.freeforums.net/thread/6886/loot-little-guide-treasure-hunting" target="_blank" class="small">Distance Guide</a>
-</div>
-
-<!-- end of LSA STUFF -->
+        <button onclick="LSAClearFunc()" ><b>Clear</b></button><br>
+        <label for="LSAReporting">Reporting: </label><br>
+        <label type="text" id="LSARO" name="LSARO"></label><br>
+      </h6>
+ 
+     
+    </div>
+  <a href="https://sklotopolis.freeforums.net/thread/6886/loot-little-guide-treasure-hunting" target="_blank" class="small"> Distance Guide</a>
+<!-- end of LSA STUFF 2 / 3 -->
 
 
 <div class="div"></div><h2>Links</h2><a href="https://sklotopolis.com" target="_blank" class="small">Sklotopolis website</a>
 <a href="https://sklotopolis.com/maps" target="_blank" class="small">All Maps of all Servers</a>
 <a href="https://andistyr.github.io/wu-map/14901-topo/" target="_blank" class="small">Topographical (OLD) Livemap</a><a href="https://web.game.sklotopolis.com/unlimited/6/mapdump-flat.png" target="_blank" class="small">Original mapdump</a><div class="div"></div>
 
-<p class="disclaimer">This unofficial map and is updated by a player NOT the Sklotopolis staff team.  It is not associated with Wurm Unlimited. <br> 
 
-<a href="https://github.com/woubuc" target="_blank">Programmed by woubuc</a> - Updated by <a href="https://github.com/andistyr" target="_blank">Andistyr</a> and <a href="https://github.com/esroh4759" target="_blank">Esroh</a> <br></p></div><div id="serverinfo" onclick="toggle_serverinfo_size()"><p><span id="serverinfo_status" class="online"></span><span id="serverinfo_players">0</span><span class="label"> players online</span></p><div id="serverinfo_harvest"><h2>In season<span> right now</span></h2><div id="serverinfo_harvest_items"><p><span class="plant"></span><span class="type"></span></p></div></div></div><div id="searchbox"><input id="search" type="text" placeholder="Search Sklotopolis map" onkeyup="search()" onfocus="search()" onblur="hide_search()" autocomplete="off"><div id="searchresults"><a href="#" onclick="" class="location"><span><em class="name"></em><em class="mayor"></em></span></a></div></div><div id="vote_reminder"><span onclick="vote_reminder_close();" class="close">x</span><p>New players spawn <a href="https://andistyr.github.io/wu-map/14901/#spawn-point" target="_blank">here</a>.</p><span onclick="vote_reminder_close();" class="close_full">close</span></div>
+<!-- start of LSA STUFF 3 / 3 -->
+<!-- Edit to reflect LSA as an addon to Woubuc and Andistyr + Esroh work and that its not supported by Sklotopolis staff -->
+<p class="disclaimer"><b>This unofficial map addon and is updated by a player NOT the Sklotopolis staff team. <br></b>
+  It is not associated with Wurm Unlimited.  <br>
+Loot Map Assistant is an addon ontop of the Webmap made by 
+<a href="https://github.com/woubuc" target="_blank">woubuc</a>
+, <a href="https://github.com/andistyr" target="_blank"> Andistyr</a> and <a href="https://github.com/esroh4759" target="_blank">Esroh</a><br>
+LMA assistant addon by <a href="https://github.com/axeblade346/axeblade346.github.io" target="_blank">Axeblade346</a> <br>
+<!-- end of LSA STUFF 3 / 3-->
+
+<br></p></div><div id="serverinfo" onclick="toggle_serverinfo_size()"><p><span id="serverinfo_status" class="online"></span><span id="serverinfo_players">0</span><span class="label"> players online</span></p><div id="serverinfo_harvest"><h2>In season<span> right now</span></h2><div id="serverinfo_harvest_items"><p><span class="plant"></span><span class="type"></span></p></div></div></div><div id="searchbox"><input id="search" type="text" placeholder="Search Sklotopolis map" onkeyup="search()" onfocus="search()" onblur="hide_search()" autocomplete="off"><div id="searchresults"><a href="#" onclick="" class="location"><span><em class="name"></em><em class="mayor"></em></span></a></div></div><div id="vote_reminder"><span onclick="vote_reminder_close();" class="close">x</span><p>New players spawn <a href="https://andistyr.github.io/wu-map/14901/#spawn-point" target="_blank">here</a>.</p><span onclick="vote_reminder_close();" class="close_full">close</span></div>
 
 
 <div id="addform" onclick="hide_add_form()"><iframe src="about:blank"></iframe></div>
