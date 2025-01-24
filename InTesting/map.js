@@ -138,7 +138,9 @@ init = function() {
         },
         tileSize: new google.maps.Size(256, 256),
         minZoom: 2,
-        maxZoom: 5
+
+        //LSA stuff - changed from 5 to 10 max zoom
+        maxZoom: 10
       });
       
       // Apply the new tile layer to the map.

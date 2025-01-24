@@ -293,6 +293,9 @@ function LSAPolygon (LSAminAX,LSAminAY,LSAminBX,LSAminBY,LSAmaxAX,LSAmaxAY,LSAma
     strokeWeight: 5,
     fillColor: LSAPolyFillcolor,
     fillOpacity: 0.1,
+	clickable: false,
+	editable: false,
+	dragable: false
   });
   LSACountPoly.push(LSAPoly);
   LSAPoly.setMap(map);
