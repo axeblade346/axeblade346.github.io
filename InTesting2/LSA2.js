@@ -1,14 +1,3 @@
-
-// BUG Atm
-//LSA2.js:266 Uncaught TypeError: LSACountInter[i].setMap is not a function
-//at LSAIntersectionCalc (LSA2.js:266:21)
-//at LSAPolygon (LSA2.js:231:3)
-//at LSADraw (LSA2.js:183:1)
-//at LSA (LSA2.js:87:9)
-//at HTMLButtonElement.onclick (VM704 index.html:1:1)
-
-
-
 var LSAmapsize = 4096
 
 var LSACountLine = [] ; //used to store  LSA Line draws
