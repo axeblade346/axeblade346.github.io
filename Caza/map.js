@@ -1,7 +1,7 @@
 var change_map, clear_home, close_infowin, deed_tags, distance, filter, find_nearby_locations, hide_add_form, hide_search, infowin, init, marker, projection, search, set_home, share_coords, share_deed, show_add_form, show_coords_info, show_coords_on_map, show_deed_info, show_deed_on_map, toggle_markers, toggle_serverinfo_size, toggle_sidebar, update_markers, update_stats, vote_reminder_close, vote_reminder_open,
   indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] == item) return i; } return -1; };
 
-    var TILE_URL = 'https://web.game.sklotopolis.com/unlimited/2/tiles-flat/tile_{z}_{x}_{y}.png';
+    var TILE_URL = 'https://web.game.sklotopolis.com/unlimited/4/tiles-flat/tile_{z}_{x}_{y}.png';
 
     var map;
     var mapEl;
@@ -15,8 +15,8 @@ infowin = '';
 deed_tags = {};
 
 projection = {
-  size: 4096,
-  mid: 2048,
+  size: 2048,
+  mid: 1024,
   coord_multiplier: 1,
   max_lat: 85,
   max_long: 180,
@@ -88,10 +88,10 @@ init = function() {
   Sklotopolis = new google.maps.ImageMapType({
     getTileUrl: function(coord, zoom) {
       if (coord.x == 0 && coord.y == 0) {
-        return 'https://web.game.sklotopolis.com/unlimited/2/mapdump-flat.png';
+        return 'https://web.game.sklotopolis.com/unlimited/4/mapdump-flat.png';
       }
     },
-    tileSize: new google.maps.Size(4096, 4096),
+    tileSize: new google.maps.Size(2048, 2048),
     maxZoom: 2,
     minZoom: 2,
     name: 'Official map dump'
@@ -411,7 +411,7 @@ init = function() {
       init_moved = true;
     }
   } else if (!init_moved) {
-    home_deed = localStorage.getItem('wu_map_home_deed_14816');
+    home_deed = localStorage.getItem('wu_map_home_deed_14818');
     if (home_deed != null) {
       if (home_deed !== '') {
         show_deed_on_map(home_deed, false);
@@ -570,12 +570,12 @@ toggle_serverinfo_size = function() {
 };
 
 set_home = function(tag, img) {
-  localStorage.setItem('wu_map_home_deed_14816', tag);
+  localStorage.setItem('wu_map_home_deed_14818', tag);
   return show_deed_info(tag);
 };
 
 clear_home = function() {
-  return localStorage.setItem('wu_map_home_deed_14816', '');
+  return localStorage.setItem('wu_map_home_deed_14818', '');
 };
 
 show_deed_on_map = function(tag, showInfo) {
@@ -671,8 +671,7 @@ show_deed_info = function(tag) {
   if (deed.lastActive != null && deed.lastActive != "") {
 	props.push('<p style="margin-bottom:6px">' + deed.lastActive + '</p>');
   }
-  
-  if(deed.allianceName != null && deed.allianceName != "")
+   if(deed.allianceName != null && deed.allianceName != "")
   {
 	props.push('<p style="margin-bottom:6px">Alliance: ' + deed.allianceName + '</p>');
   }
@@ -692,6 +691,7 @@ show_deed_info = function(tag) {
   if (deed.motto != null) {
     props.push('<p style="font-style:italic">' + deed.motto + '</p>');
   }
+  
   nearby = find_nearby_locations({
     x: deed.x,
     y: deed.y
@@ -700,7 +700,7 @@ show_deed_info = function(tag) {
     props.push(nearby);
   }
   home_img = '<img id="home_deed" src="images/home_off.png" style="float:right;padding:0 0 5px 5px;cursor:pointer;" onmouseenter="this.src=\'images/home_hover.png\';" onmouseleave="this.src=\'images/home_off.png\';" onclick="set_home(\'' + deed.tag + '\', this)" title="Set as home" />';
-  if (localStorage.getItem('wu_map_home_deed_14816') == deed.tag) {
+  if (localStorage.getItem('wu_map_home_deed_14818') == deed.tag) {
     home_img = '<img id="home_deed" src="images/home_on.png" style="float:right;padding:0 0 5px 5px;cursor:pointer;" onclick="clear_home(this)" title="Clear home location" />';
   }
   infowin = new google.maps.InfoWindow({
@@ -716,7 +716,7 @@ show_deed_info = function(tag) {
 share_deed = function(tag, el) {
   el.style.backgroundColor = 'white';
   el.style.padding = 0;
-  el.innerHTML = '<input type="text" value="https://andistyr.github.io/wu-map/14816/#' + tag + '" style="width:280px;padding:2px;border-radius:3px;border:1px solid #dedede;font-size:12px" onclick="this.select()" />';
+  el.innerHTML = '<input type="text" value="https://andistyr.github.io/wu-map/14818/#' + tag + '" style="width:280px;padding:2px;border-radius:3px;border:1px solid #dedede;font-size:12px" onclick="this.select()" />';
   el.childNodes[0].select();
   return false;
 };
@@ -892,7 +892,7 @@ show_coords_info = function(coords) {
 share_coords = function(x, y, el) {
   el.style.backgroundColor = 'white';
   el.style.padding = 0;
-  el.innerHTML = '<input type="text" value="https://andistyr.github.io/wu-map/14816/#' + x + '_' + y + '" style="width:255px;padding:2px;border-radius:3px;border:1px solid #dedede;font-size:12px" onclick="this.select()" />';
+  el.innerHTML = '<input type="text" value="https://andistyr.github.io/wu-map/14818/#' + x + '_' + y + '" style="width:255px;padding:2px;border-radius:3px;border:1px solid #dedede;font-size:12px" onclick="this.select()" />';
   el.childNodes[0].select();
   return false;
 };
@@ -1045,7 +1045,7 @@ search = function() {
         searchtext = location[0];
         location = location[1];
         if (location !== '') {
-          home_deed = localStorage.getItem('wu_map_home_deed_14816');
+          home_deed = localStorage.getItem('wu_map_home_deed_14818');
           if ((location == 'm' || location == 'me') && (home_deed != null)) {
             deed = deeds[deed_tags[home_deed]];
           } else if (location == 'n' || location == 'nt') {
@@ -1063,7 +1063,7 @@ search = function() {
       } else {
         searchtext = searchtext.replace('nearby ', '');
         if (searchtext !== '') {
-          home_deed = localStorage.getItem('wu_map_home_deed_14816');
+          home_deed = localStorage.getItem('wu_map_home_deed_14818');
           if (home_deed != null) {
             deed = deeds[deed_tags[home_deed]];
           }
@@ -1073,11 +1073,11 @@ search = function() {
         closest = {
           resource: {
             found: false,
-            dist: 4096
+            dist: 2048
           },
           forest: {
             found: false,
-            dist: 4096
+            dist: 2048
           }
         };
         for (m = 0, len1 = resources.length; m < len1; m++) {
