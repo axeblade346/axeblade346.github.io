@@ -1,0 +1,34 @@
+
+<!-- add rigth after <a id="sidebartoggle" href="#" onclick="toggle_sidebar(); return false">&#x2261;</a><div id="sidebar">  in index.html--->
+
+<!-- start of LSA STUFF --> 
+<h2><b>LOOT MAP ASSITANT</b><br>
+<i>This is an unofficial map addon</i><br>
+<i>made by a player and ain't</i><br>
+<i>maintained by Sklotopolis staff</i><br>
+<br>
+Map : Caza &nbsp; &nbsp; &nbsp;LMA build : S1.0.1
+</h2>
+<link rel="stylesheet" href="lsa.css"> 
+<script type="text/javascript" src="LSA2.js"></script> <!--need a copy if self hosted -->
+<script src="https://maps.googleapis.com/maps/api/js?libraries=drawing&key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk"></script>
+<script src="https://cdn.rawgit.com/bjornharrtell/jsts/gh-pages/1.1.2/jsts.min.js"></script>
+<!-- local copy of <script src="https://cdn.rawgit.com/bjornharrtell/jsts/gh-pages/1.1.2/jsts.min.js"></script>  -->
+<!-- <script src="cdn.jsdelivr.net_gh_bjornharrtell_jsts@gh-pages_1.1.2_jsts.min.js"></script> -->
+<div class="div"></div><h2>Loot Map Assistant</h2>
+<div class="sub">
+    <h6>
+        <label for="gpsstring">GPS : </label><br>
+        <input type="text" id="gpsstring" name="gpsstring"><br>
+        <label for="eventstring">Event Message : </label><br>
+        <input type="text" id="eventstring" name="eventstring"><br>
+        <button onclick="LSA(gpsstring.value,eventstring.value);document.getElementById('gpsstring').value ='';document.getElementById('eventstring').value ='';document.getElementById('LSARO').value ='';" ><b>Draw it</b></button>
+        &nbsp;&nbsp;&nbsp;
+        <button onclick="LSAClearFunc()" ><b>Clear</b></button><br>
+        <label for="LSAReporting">Reporting: </label><br>
+        <label type="text" id="LSARO" name="LSARO"></label><br>
+      </h6>
+    </div>
+  <a href="https://sklotopolis.freeforums.net/thread/6886/loot-little-guide-treasure-hunting" target="_blank" class="small"> Distance Guide</a>
+<div class="div"></div>
+<!-- end of LSA STUFF -->
