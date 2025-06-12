@@ -1,3 +1,7 @@
+//  LSA 1.0.2
+//  -- Wait for Danky to publish the Direction update of lootmaps before removing old code (lines 38 to 54)
+
+
 var LSACountLine = [] ; //used to store  LSA Line draws
 var LSACountPoly = [] ; //used to store  LSA Poly draws
 
@@ -48,6 +52,29 @@ function LSA (gpsmessage,eventmessage)
 		}else if (eventstr.includes("left of you")==true){
 			LSAdirection=180;
 		}
+				
+		//Dual MODE for switchover , remove old code above after switchover 
+		
+		if (eventstr.includes("north")==true && eventstr.includes("northwest")==false && eventstr.includes("northeast")==false){
+			LSAdirection=270;
+		} else if (eventstr.includes("northeast")==true){
+			LSAdirection=315;
+		} else if (eventstr.includes("east")==true && eventstr.includes("northeast")==false && eventstr.includes("southeast")==false)
+			{LSAdirection=0;
+		} else if (eventstr.includes("southeast")==true)
+			{LSAdirection=45;
+		} else if (eventstr.includes("south")==true && eventstr.includes("southeast")==false && eventstr.includes("southwest")==false)
+			{LSAdirection=90;
+		} else if (eventstr.includes("southwest")==true)
+			{LSAdirection=135;
+		} else if (eventstr.includes("west")==true && eventstr.includes("northwest")==false && eventstr.includes("southwest")==false)
+			{LSAdirection=180;
+		} else if (eventstr.includes("northwest")==true)
+			{LSAdirection=225;
+		}		
+		
+		
+		
 		//get distance from eventmessage
 		//Note the order is odd due to the fact that that some eventstrings contain the same words
 		if (eventstr.includes("practically standing")==true){
