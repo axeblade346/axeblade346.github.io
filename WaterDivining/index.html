@@ -30,7 +30,7 @@
 		
 		h5 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
         
         .controls {
@@ -186,6 +186,13 @@
             opacity: 0.3;
         }
         
+        .excluded-area {
+            background-color: #333333 !important;
+            opacity: 0.7;
+            background-image: repeating-linear-gradient(45deg, #333333, #333333 5px, #555555 5px, #555555 10px);
+            color: white;
+        }
+        
         .area-5-10 {
             background-color: #88ff88;
             opacity: 0.3;
@@ -300,9 +307,10 @@
     <div class="container">
 		<h1>Wurm Water Divining Assitant</h1>
 		<h3>Made for the Sklotopolis server by Axeblade.</h3>
-		<u><h3>This webpage is not hosted or updated by Sklotopolis staff</h3></u>
-		<h3>Contact Axeblade via the Sklotopolis forums for help</h3>
-        <h5><a href="https://sklotopolis.freeforums.net/user/1646" target="_blank">Click here and then the send message button on the forum page</a></h5>
+		<h3><u>This webpage is not hosted or updated by Sklotopolis staff. </u>
+		Contact Axeblade via the Sklotopolis forums with any issues you may find.</h3>
+        <h5><a href="https://sklotopolis.freeforums.net/user/1646" target="_blank">Click here and then the send message button on the forum page to send a message to Axeblade</a></h5>
+		<i><h5>Disclaimer : This page was written with the assitance of myninja.ai</h5></i>
 
         
         <div class="controls">
@@ -336,6 +344,7 @@
                 <button onclick="clearGrid()">🗑️ Clear All</button>
                 <button onclick="addReading()">📍 Add Reading from Click</button>
                 <button onclick="toggleAreas()">👁️ Toggle Area Display</button>
+                <button onclick="toggleExcludedAreas()">🚫 Toggle Excluded Areas</button>
             </div>
         </div>
         
@@ -364,6 +373,10 @@
                     <div class="legend-item">
                         <div class="legend-color reading-point" style="background-color: #f9f9f9;"></div>
                         <span><strong>Reading Points</strong> (thick border)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color excluded-area"></div>
+                        <span><strong>Excluded Area</strong> (water cannot be here)</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-color high-probability"></div>
@@ -402,7 +415,9 @@
         let selectedCell = null;
         let addingMode = false;
         let showAreas = true;
+        let showExcludedAreas = true;
         let probabilityMap = new Map();
+        let excludedAreasMap = new Map(); // Track areas where water cannot be
         const GRID_SIZE = 31;
         const CENTER = Math.floor(GRID_SIZE / 2); // Center position (15 for 31x31 grid)
         
@@ -473,8 +488,78 @@
             return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2)); // Chebyshev distance
         }
         
+        function calculateExcludedAreas() {
+            excludedAreasMap.clear();
+            
+            const readings = {
+                faint: parseCoordinates(document.getElementById('reading1').value),
+                energy: parseCoordinates(document.getElementById('reading2').value),
+                circular: parseCoordinates(document.getElementById('reading3').value),
+                rapid: parseCoordinates(document.getElementById('reading4').value),
+                water: parseCoordinates(document.getElementById('waterSource').value)
+            };
+            
+            // For each cell in the grid, check if it's excluded based on reading distances
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    let isExcluded = false;
+                    let exclusionReason = "";
+                    
+                    // Check against faint tugs readings (5-10 tiles)
+                    readings.faint.forEach(reading => {
+                        const dist = getDistance(col, row, reading.x, reading.y);
+                        if (dist < 5 || dist > 10) {
+                            isExcluded = true;
+                            exclusionReason = `Faint tugs at (${reading.x - CENTER},${reading.y - CENTER}) requires distance 5-10, but actual distance is ${dist}`;
+                        }
+                    });
+                    
+                    // Check against energy flow readings (3-4 tiles)
+                    readings.energy.forEach(reading => {
+                        const dist = getDistance(col, row, reading.x, reading.y);
+                        if (dist < 3 || dist > 4) {
+                            isExcluded = true;
+                            exclusionReason = `Energy flow at (${reading.x - CENTER},${reading.y - CENTER}) requires distance 3-4, but actual distance is ${dist}`;
+                        }
+                    });
+                    
+                    // Check against circular swing readings (2 tiles)
+                    readings.circular.forEach(reading => {
+                        const dist = getDistance(col, row, reading.x, reading.y);
+                        if (dist !== 2) {
+                            isExcluded = true;
+                            exclusionReason = `Circular swing at (${reading.x - CENTER},${reading.y - CENTER}) requires distance 2, but actual distance is ${dist}`;
+                        }
+                    });
+                    
+                    // Check against rapid swing readings (1 tile)
+                    readings.rapid.forEach(reading => {
+                        const dist = getDistance(col, row, reading.x, reading.y);
+                        if (dist !== 1) {
+                            isExcluded = true;
+                            exclusionReason = `Rapid swing at (${reading.x - CENTER},${reading.y - CENTER}) requires distance 1, but actual distance is ${dist}`;
+                        }
+                    });
+                    
+                    // Check against confirmed water sources (0 tiles)
+                    readings.water.forEach(reading => {
+                        const dist = getDistance(col, row, reading.x, reading.y);
+                        if (dist !== 0 && col === reading.x && row === reading.y) {
+                            isExcluded = true;
+                            exclusionReason = `Water source must be at exact location (${reading.x - CENTER},${reading.y - CENTER})`;
+                        }
+                    });
+                    
+                    if (isExcluded) {
+                        excludedAreasMap.set(`${col},${row}`, { reason: exclusionReason });
+                    }
+                }
+            }
+        }
+        
         function calculateProbabilities() {
             probabilityMap.clear();
+            calculateExcludedAreas();
             
             const readings = {
                 faint: parseCoordinates(document.getElementById('reading1').value),
@@ -487,6 +572,11 @@
             // For each cell in the grid, calculate probability of being a water source
             for (let row = 0; row < GRID_SIZE; row++) {
                 for (let col = 0; col < GRID_SIZE; col++) {
+                    // Skip excluded areas
+                    if (excludedAreasMap.has(`${col},${row}`)) {
+                        continue;
+                    }
+                    
                     let probability = 0;
                     let evidence = 0;
                     
@@ -496,9 +586,6 @@
                         if (dist >= 5 && dist <= 10) {
                             probability += 20;
                             evidence++;
-                        } else if (dist < 5) {
-                            probability += 10; // Closer than expected, but still possible
-                            evidence++;
                         }
                     });
                     
@@ -506,12 +593,6 @@
                         const dist = getDistance(col, row, reading.x, reading.y);
                         if (dist >= 3 && dist <= 4) {
                             probability += 30;
-                            evidence++;
-                        } else if (dist < 3) {
-                            probability += 20; // Closer than expected
-                            evidence++;
-                        } else if (dist === 5) {
-                            probability += 15; // Slightly further but possible
                             evidence++;
                         }
                     });
@@ -521,12 +602,6 @@
                         if (dist === 2) {
                             probability += 40;
                             evidence++;
-                        } else if (dist === 1) {
-                            probability += 30; // Closer than expected
-                            evidence++;
-                        } else if (dist === 3) {
-                            probability += 20; // Slightly further
-                            evidence++;
                         }
                     });
                     
@@ -534,12 +609,6 @@
                         const dist = getDistance(col, row, reading.x, reading.y);
                         if (dist === 1) {
                             probability += 50;
-                            evidence++;
-                        } else if (dist === 0) {
-                            probability += 40; // Should be the source itself
-                            evidence++;
-                        } else if (dist === 2) {
-                            probability += 25; // Slightly further
                             evidence++;
                         }
                     });
@@ -593,6 +662,19 @@
                 readings.energy.forEach(reading => colorArea(reading.x, reading.y, 3, 4, 'area-3-4'));
                 readings.circular.forEach(reading => colorArea(reading.x, reading.y, 2, 2, 'area-2'));
                 readings.rapid.forEach(reading => colorArea(reading.x, reading.y, 1, 1, 'area-1'));
+            }
+            
+            // Mark excluded areas if enabled
+            if (showExcludedAreas) {
+                excludedAreasMap.forEach((data, coords) => {
+                    const [col, row] = coords.split(',').map(n => parseInt(n));
+                    const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                    if (cell) {
+                        cell.classList.add('excluded-area');
+                        cell.title = data.reason; // Add tooltip with exclusion reason
+                        cell.textContent = '❌';
+                    }
+                });
             }
             
             // Apply probability coloring
@@ -717,9 +799,11 @@
                                 parseCoordinates(document.getElementById('reading2').value).length +
                                 parseCoordinates(document.getElementById('reading3').value).length +
                                 parseCoordinates(document.getElementById('reading4').value).length;
+            const excludedCount = excludedAreasMap.size;
             
             document.getElementById('statsContent').innerHTML = `
                 <div>Total Readings: ${totalReadings}</div>
+                <div>Excluded Areas: ${excludedCount}</div>
                 <div>High Confidence Areas: ${highConfidence}</div>
                 <div>Medium Confidence Areas: ${mediumConfidence}</div>
                 <div>Best Prediction: ${predictions.length > 0 ? `(${predictions[0].centerX}, ${predictions[0].centerY}) - ${predictions[0].probability.toFixed(1)}%` : 'None'}</div>
@@ -734,6 +818,7 @@
             document.getElementById('waterSource').value = '';
             
             probabilityMap.clear();
+            excludedAreasMap.clear();
             
             document.querySelectorAll('.cell').forEach(cell => {
                 const row = parseInt(cell.dataset.row);
@@ -747,6 +832,7 @@
                 cell.style.backgroundColor = '';
                 cell.style.opacity = '';
                 cell.textContent = '';
+                cell.title = '';
             });
             
             document.getElementById('coordinates').textContent = 'Click on a grid cell to see coordinates';
@@ -761,6 +847,11 @@
         
         function toggleAreas() {
             showAreas = !showAreas;
+            updateGrid();
+        }
+        
+        function toggleExcludedAreas() {
+            showExcludedAreas = !showExcludedAreas;
             updateGrid();
         }
         
