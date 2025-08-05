@@ -111,8 +111,8 @@
         
         .grid {
             display: grid;
-            grid-template-columns: repeat(20, 25px);
-            grid-template-rows: repeat(20, 25px);
+            grid-template-columns: repeat(31, 25px);
+            grid-template-rows: repeat(31, 25px);
             gap: 1px;
             background-color: #ccc;
             padding: 15px;
@@ -288,7 +288,13 @@
             border-radius: 5px;
             margin-top: 15px;
         }
+        
+        .center-cell {
+            background-color: #e0e0ff !important;
+            border: 2px dashed #5555ff !important;
+        }
     </style>
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
 </head>
 <body>
     <div class="container">
@@ -302,27 +308,27 @@
         <div class="controls">
             <div class="input-group">
                 <label for="reading1">Faint Tugs Reading (5-10 tiles away):</label>
-                <input type="text" id="reading1" placeholder="Enter coordinates where you detected faint tugs (e.g., 10,8; 12,9)">
+                <input type="text" id="reading1" placeholder="Enter coordinates where you detected faint tugs (e.g., 0,0; 2,1)">
             </div>
             
             <div class="input-group">
                 <label for="reading2">Energy Flow Reading (3-4 tiles away):</label>
-                <input type="text" id="reading2" placeholder="Enter coordinates where pendulum started moving (e.g., 12,10; 14,11)">
+                <input type="text" id="reading2" placeholder="Enter coordinates where pendulum started moving (e.g., 2,2; 4,1)">
             </div>
             
             <div class="input-group">
                 <label for="reading3">Circular Swing Reading (2 tiles away):</label>
-                <input type="text" id="reading3" placeholder="Enter coordinates where pendulum swung in circles (e.g., 14,12)">
+                <input type="text" id="reading3" placeholder="Enter coordinates where pendulum swung in circles (e.g., 4,2)">
             </div>
             
             <div class="input-group">
                 <label for="reading4">Rapid Swing Reading (1 tile away):</label>
-                <input type="text" id="reading4" placeholder="Enter coordinates where pendulum swung rapidly (e.g., 15,13)">
+                <input type="text" id="reading4" placeholder="Enter coordinates where pendulum swung rapidly (e.g., 5,3)">
             </div>
             
             <div class="input-group">
                 <label for="waterSource">Confirmed Water Source (0 tiles):</label>
-                <input type="text" id="waterSource" placeholder="Enter coordinates of confirmed water source (e.g., 16,14)">
+                <input type="text" id="waterSource" placeholder="Enter coordinates of confirmed water source (e.g., 6,4)">
             </div>
             
             <div class="button-group">
@@ -343,6 +349,10 @@
                 
                 <div class="legend">
                     <h3>Legend</h3>
+                    <div class="legend-item">
+                        <div class="legend-color center-cell"></div>
+                        <span><strong>Center Cell (0,0)</strong></span>
+                    </div>
                     <div class="legend-item">
                         <div class="legend-color" style="background-color: #0066cc;"></div>
                         <span><strong>Confirmed Water Source</strong></span>
@@ -393,32 +403,43 @@
         let addingMode = false;
         let showAreas = true;
         let probabilityMap = new Map();
+        const GRID_SIZE = 31;
+        const CENTER = Math.floor(GRID_SIZE / 2); // Center position (15 for 31x31 grid)
         
-        // Create the 20x20 grid
+        // Create the 31x31 grid
         function createGrid() {
             const grid = document.getElementById('grid');
             grid.innerHTML = '';
             
-            for (let row = 0; row < 20; row++) {
-                for (let col = 0; col < 20; col++) {
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
                     const cell = document.createElement('div');
                     cell.className = 'cell';
                     cell.dataset.row = row;
                     cell.dataset.col = col;
                     cell.addEventListener('click', () => cellClick(row, col, cell));
+                    
+                    // Mark the center cell
+                    if (row === CENTER && col === CENTER) {
+                        cell.classList.add('center-cell');
+                    }
+                    
                     grid.appendChild(cell);
                 }
             }
         }
         
         function cellClick(row, col, cell) {
-            document.getElementById('coordinates').textContent = `Selected: Row ${row + 1}, Column ${col + 1} (${col + 1},${row + 1})`;
+            // Convert to center-based coordinates
+            const centerX = col - CENTER;
+            const centerY = row - CENTER;
+            document.getElementById('coordinates').textContent = `Selected: (${centerX},${centerY}) [Grid: Row ${row + 1}, Column ${col + 1}]`;
             
             if (addingMode) {
                 const reading = prompt("What type of reading is this?\n1: Faint tugs (5-10 tiles)\n2: Energy flow (3-4 tiles)\n3: Circular swing (2 tiles)\n4: Rapid swing (1 tile)\n5: Water source (0 tiles)");
                 
                 if (reading >= 1 && reading <= 5) {
-                    const coordinate = `${col + 1},${row + 1}`;
+                    const coordinate = `${centerX},${centerY}`;
                     const inputId = reading == 5 ? 'waterSource' : `reading${reading}`;
                     const input = document.getElementById(inputId);
                     
@@ -438,8 +459,14 @@
             
             return coordString.split(';').map(coord => {
                 const [x, y] = coord.trim().split(',').map(n => parseInt(n.trim()));
-                return { x: x - 1, y: y - 1 }; // Convert to 0-based indexing
-            }).filter(coord => !isNaN(coord.x) && !isNaN(coord.y) && coord.x >= 0 && coord.x < 20 && coord.y >= 0 && coord.y < 20);
+                // Convert from center-based to grid-based coordinates
+                return { 
+                    x: x + CENTER, 
+                    y: y + CENTER 
+                };
+            }).filter(coord => !isNaN(coord.x) && !isNaN(coord.y) && 
+                     coord.x >= 0 && coord.x < GRID_SIZE && 
+                     coord.y >= 0 && coord.y < GRID_SIZE);
         }
         
         function getDistance(x1, y1, x2, y2) {
@@ -458,8 +485,8 @@
             };
             
             // For each cell in the grid, calculate probability of being a water source
-            for (let row = 0; row < 20; row++) {
-                for (let col = 0; col < 20; col++) {
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
                     let probability = 0;
                     let evidence = 0;
                     
@@ -539,7 +566,14 @@
             
             // Clear all existing classes
             document.querySelectorAll('.cell').forEach(cell => {
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                
                 cell.className = 'cell';
+                if (row === CENTER && col === CENTER) {
+                    cell.classList.add('center-cell');
+                }
+                
                 cell.style.backgroundColor = '';
                 cell.style.opacity = '';
                 cell.textContent = '';
@@ -617,8 +651,8 @@
         }
         
         function colorArea(centerX, centerY, minDist, maxDist, className) {
-            for (let row = 0; row < 20; row++) {
-                for (let col = 0; col < 20; col++) {
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
                     const dist = getDistance(col, row, centerX, centerY);
                     if (dist >= minDist && dist <= maxDist) {
                         const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
@@ -637,6 +671,9 @@
                 predictions.push({
                     x: col,
                     y: row,
+                    // Convert to center-based coordinates for display
+                    centerX: col - CENTER,
+                    centerY: row - CENTER,
                     probability: data.probability,
                     evidence: data.evidence
                 });
@@ -661,7 +698,7 @@
                 
                 return `
                     <div class="prediction-item ${level}">
-                        <strong>Position: (${pred.x + 1}, ${pred.y + 1})</strong><br>
+                        <strong>Position: (${pred.centerX}, ${pred.centerY})</strong><br>
                         Confidence: ${confidence.toFixed(1)}%<br>
                         Evidence Points: ${pred.evidence}
                         <div class="confidence-bar">
@@ -685,7 +722,7 @@
                 <div>Total Readings: ${totalReadings}</div>
                 <div>High Confidence Areas: ${highConfidence}</div>
                 <div>Medium Confidence Areas: ${mediumConfidence}</div>
-                <div>Best Prediction: ${predictions.length > 0 ? `(${predictions[0].x + 1}, ${predictions[0].y + 1}) - ${predictions[0].probability.toFixed(1)}%` : 'None'}</div>
+                <div>Best Prediction: ${predictions.length > 0 ? `(${predictions[0].centerX}, ${predictions[0].centerY}) - ${predictions[0].probability.toFixed(1)}%` : 'None'}</div>
             `;
         }
         
@@ -699,7 +736,14 @@
             probabilityMap.clear();
             
             document.querySelectorAll('.cell').forEach(cell => {
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                
                 cell.className = 'cell';
+                if (row === CENTER && col === CENTER) {
+                    cell.classList.add('center-cell');
+                }
+                
                 cell.style.backgroundColor = '';
                 cell.style.opacity = '';
                 cell.textContent = '';
@@ -727,4 +771,3 @@
     </script>
 </body>
 </html>
-
