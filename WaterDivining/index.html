@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Dowsing Grid - Advanced Triangulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f8ff;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c5aa0;
+            margin-bottom: 0px;
+        }
+        
+		h3 {
+            text-align: center;
+            color: #2c5aa0;
+            margin-bottom: 0px;
+        }
+		
+		h5 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #2c5aa0;
+            outline: none;
+        }
+        
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        button {
+            background-color: #2c5aa0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #1e3d6f;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .grid-section {
+            flex: 1;
+        }
+        
+        .analysis-section {
+            width: 300px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        
+        .grid-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(20, 25px);
+            grid-template-rows: repeat(20, 25px);
+            gap: 1px;
+            background-color: #ccc;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .cell {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            font-weight: bold;
+        }
+        
+        .cell:hover {
+            transform: scale(1.3);
+            z-index: 100;
+            border: 2px solid #333;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        
+        .reading-point {
+            border: 3px solid #000 !important;
+            box-shadow: 0 0 5px rgba(0,0,0,0.8);
+        }
+        
+        .water-source {
+            background-color: #0066cc !important;
+            border: 3px solid #004499 !important;
+            color: white;
+        }
+        
+        .predicted-water {
+            background-color: #0088ff !important;
+            border: 3px solid #0066cc !important;
+            animation: pulse 2s infinite;
+            color: white;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        .high-probability {
+            background-color: #ff0000;
+            opacity: 0.8;
+            color: white;
+        }
+        
+        .medium-probability {
+            background-color: #ff6600;
+            opacity: 0.6;
+            color: white;
+        }
+        
+        .low-probability {
+            background-color: #ffaa00;
+            opacity: 0.4;
+        }
+        
+        .very-low-probability {
+            background-color: #ffdd00;
+            opacity: 0.3;
+        }
+        
+        .area-5-10 {
+            background-color: #88ff88;
+            opacity: 0.3;
+        }
+        
+        .area-3-4 {
+            background-color: #ffcc44;
+            opacity: 0.4;
+        }
+        
+        .area-2 {
+            background-color: #ff8844;
+            opacity: 0.5;
+        }
+        
+        .area-1 {
+            background-color: #ff4444;
+            opacity: 0.6;
+        }
+        
+        .legend {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        
+        .legend h3 {
+            margin-top: 0;
+            color: #2c5aa0;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .legend-color {
+            width: 25px;
+            height: 15px;
+            margin-right: 10px;
+            border: 1px solid #333;
+        }
+        
+        .coordinates {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #2c5aa0;
+        }
+        
+        .analysis-section h3 {
+            color: #2c5aa0;
+            margin-top: 0;
+        }
+        
+        .prediction-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .prediction-item {
+            background: #f0f8ff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #2c5aa0;
+        }
+        
+        .prediction-item.high {
+            border-left-color: #ff0000;
+            background: #ffe0e0;
+        }
+        
+        .prediction-item.medium {
+            border-left-color: #ff6600;
+            background: #fff0e0;
+        }
+        
+        .confidence-bar {
+            width: 100%;
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+        
+        .stats {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+		<h1>Wurm Water Divining Assitant</h1>
+		<h3>Made for the Sklotopolis server by Axeblade.</h3>
+		<u><h3>This webpage is not hosted or updated by Sklotopolis staff</h3></u>
+		<h3>Contact Axeblade via the Sklotopolis forums with issues</h3>
+        <h5><a href="https://sklotopolis.freeforums.net/user/1646" target="_blank">Click here and then the send message button on the forum page</a></h5>
+
+        
+        <div class="controls">
+            <div class="input-group">
+                <label for="reading1">Faint Tugs Reading (5-10 tiles away):</label>
+                <input type="text" id="reading1" placeholder="Enter coordinates where you detected faint tugs (e.g., 10,8; 12,9)">
+            </div>
+            
+            <div class="input-group">
+                <label for="reading2">Energy Flow Reading (3-4 tiles away):</label>
+                <input type="text" id="reading2" placeholder="Enter coordinates where pendulum started moving (e.g., 12,10; 14,11)">
+            </div>
+            
+            <div class="input-group">
+                <label for="reading3">Circular Swing Reading (2 tiles away):</label>
+                <input type="text" id="reading3" placeholder="Enter coordinates where pendulum swung in circles (e.g., 14,12)">
+            </div>
+            
+            <div class="input-group">
+                <label for="reading4">Rapid Swing Reading (1 tile away):</label>
+                <input type="text" id="reading4" placeholder="Enter coordinates where pendulum swung rapidly (e.g., 15,13)">
+            </div>
+            
+            <div class="input-group">
+                <label for="waterSource">Confirmed Water Source (0 tiles):</label>
+                <input type="text" id="waterSource" placeholder="Enter coordinates of confirmed water source (e.g., 16,14)">
+            </div>
+            
+            <div class="button-group">
+                <button onclick="updateGrid()">🔄 Analyze & Update Grid</button>
+                <button onclick="clearGrid()">🗑️ Clear All</button>
+                <button onclick="addReading()">📍 Add Reading from Click</button>
+                <button onclick="toggleAreas()">👁️ Toggle Area Display</button>
+            </div>
+        </div>
+        
+        <div class="coordinates" id="coordinates">Click on a grid cell to see coordinates</div>
+        
+        <div class="main-content">
+            <div class="grid-section">
+                <div class="grid-container">
+                    <div class="grid" id="grid"></div>
+                </div>
+                
+                <div class="legend">
+                    <h3>Legend</h3>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #0066cc;"></div>
+                        <span><strong>Confirmed Water Source</strong></span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color predicted-water"></div>
+                        <span><strong>Predicted Water Source</strong> (pulsing)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color reading-point" style="background-color: #f9f9f9;"></div>
+                        <span><strong>Reading Points</strong> (thick border)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color high-probability"></div>
+                        <span><strong>High Probability</strong> (80%+)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color medium-probability"></div>
+                        <span><strong>Medium Probability</strong> (60-80%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color low-probability"></div>
+                        <span><strong>Low Probability</strong> (40-60%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color very-low-probability"></div>
+                        <span><strong>Very Low Probability</strong> (20-40%)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analysis-section">
+                <h3>🎯 Water Source Predictions</h3>
+                <div id="predictions" class="prediction-list">
+                    <p>Enter readings and click "Analyze & Update Grid" to see predictions.</p>
+                </div>
+                
+                <div class="stats" id="stats">
+                    <h4>📊 Analysis Stats</h4>
+                    <div id="statsContent">No data yet</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedCell = null;
+        let addingMode = false;
+        let showAreas = true;
+        let probabilityMap = new Map();
+        
+        // Create the 20x20 grid
+        function createGrid() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            
+            for (let row = 0; row < 20; row++) {
+                for (let col = 0; col < 20; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.addEventListener('click', () => cellClick(row, col, cell));
+                    grid.appendChild(cell);
+                }
+            }
+        }
+        
+        function cellClick(row, col, cell) {
+            document.getElementById('coordinates').textContent = `Selected: Row ${row + 1}, Column ${col + 1} (${col + 1},${row + 1})`;
+            
+            if (addingMode) {
+                const reading = prompt("What type of reading is this?\n1: Faint tugs (5-10 tiles)\n2: Energy flow (3-4 tiles)\n3: Circular swing (2 tiles)\n4: Rapid swing (1 tile)\n5: Water source (0 tiles)");
+                
+                if (reading >= 1 && reading <= 5) {
+                    const coordinate = `${col + 1},${row + 1}`;
+                    const inputId = reading == 5 ? 'waterSource' : `reading${reading}`;
+                    const input = document.getElementById(inputId);
+                    
+                    if (input.value) {
+                        input.value += '; ' + coordinate;
+                    } else {
+                        input.value = coordinate;
+                    }
+                    updateGrid();
+                }
+                addingMode = false;
+            }
+        }
+        
+        function parseCoordinates(coordString) {
+            if (!coordString.trim()) return [];
+            
+            return coordString.split(';').map(coord => {
+                const [x, y] = coord.trim().split(',').map(n => parseInt(n.trim()));
+                return { x: x - 1, y: y - 1 }; // Convert to 0-based indexing
+            }).filter(coord => !isNaN(coord.x) && !isNaN(coord.y) && coord.x >= 0 && coord.x < 20 && coord.y >= 0 && coord.y < 20);
+        }
+        
+        function getDistance(x1, y1, x2, y2) {
+            return Math.max(Math.abs(x1 - x2), Math.abs(y1 - y2)); // Chebyshev distance
+        }
+        
+        function calculateProbabilities() {
+            probabilityMap.clear();
+            
+            const readings = {
+                faint: parseCoordinates(document.getElementById('reading1').value),
+                energy: parseCoordinates(document.getElementById('reading2').value),
+                circular: parseCoordinates(document.getElementById('reading3').value),
+                rapid: parseCoordinates(document.getElementById('reading4').value),
+                water: parseCoordinates(document.getElementById('waterSource').value)
+            };
+            
+            // For each cell in the grid, calculate probability of being a water source
+            for (let row = 0; row < 20; row++) {
+                for (let col = 0; col < 20; col++) {
+                    let probability = 0;
+                    let evidence = 0;
+                    
+                    // Check against each reading type
+                    readings.faint.forEach(reading => {
+                        const dist = getDistance(col, row, reading.x, reading.y);
+                        if (dist >= 5 && dist <= 10) {
+                            probability += 20;
+                            evidence++;
+                        } else if (dist < 5) {
+                            probability += 10; // Closer than expected, but still possible
+                            evidence++;
+                        }
+                    });
+                    
+                    readings.energy.forEach(reading => {
+                        const dist = getDistance(col, row, reading.x, reading.y);
+                        if (dist >= 3 && dist <= 4) {
+                            probability += 30;
+                            evidence++;
+                        } else if (dist < 3) {
+                            probability += 20; // Closer than expected
+                            evidence++;
+                        } else if (dist === 5) {
+                            probability += 15; // Slightly further but possible
+                            evidence++;
+                        }
+                    });
+                    
+                    readings.circular.forEach(reading => {
+                        const dist = getDistance(col, row, reading.x, reading.y);
+                        if (dist === 2) {
+                            probability += 40;
+                            evidence++;
+                        } else if (dist === 1) {
+                            probability += 30; // Closer than expected
+                            evidence++;
+                        } else if (dist === 3) {
+                            probability += 20; // Slightly further
+                            evidence++;
+                        }
+                    });
+                    
+                    readings.rapid.forEach(reading => {
+                        const dist = getDistance(col, row, reading.x, reading.y);
+                        if (dist === 1) {
+                            probability += 50;
+                            evidence++;
+                        } else if (dist === 0) {
+                            probability += 40; // Should be the source itself
+                            evidence++;
+                        } else if (dist === 2) {
+                            probability += 25; // Slightly further
+                            evidence++;
+                        }
+                    });
+                    
+                    // Confirmed water sources get 100% probability
+                    readings.water.forEach(reading => {
+                        if (col === reading.x && row === reading.y) {
+                            probability = 100;
+                            evidence = 10;
+                        }
+                    });
+                    
+                    // Normalize probability based on evidence strength
+                    if (evidence > 0) {
+                        probability = Math.min(100, probability * Math.min(1, evidence / 2));
+                        probabilityMap.set(`${col},${row}`, { probability, evidence });
+                    }
+                }
+            }
+        }
+        
+        function updateGrid() {
+            calculateProbabilities();
+            
+            // Clear all existing classes
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.className = 'cell';
+                cell.style.backgroundColor = '';
+                cell.style.opacity = '';
+                cell.textContent = '';
+            });
+            
+            const readings = {
+                faint: parseCoordinates(document.getElementById('reading1').value),
+                energy: parseCoordinates(document.getElementById('reading2').value),
+                circular: parseCoordinates(document.getElementById('reading3').value),
+                rapid: parseCoordinates(document.getElementById('reading4').value),
+                water: parseCoordinates(document.getElementById('waterSource').value)
+            };
+            
+            // Color areas around readings if enabled
+            if (showAreas) {
+                readings.faint.forEach(reading => colorArea(reading.x, reading.y, 5, 10, 'area-5-10'));
+                readings.energy.forEach(reading => colorArea(reading.x, reading.y, 3, 4, 'area-3-4'));
+                readings.circular.forEach(reading => colorArea(reading.x, reading.y, 2, 2, 'area-2'));
+                readings.rapid.forEach(reading => colorArea(reading.x, reading.y, 1, 1, 'area-1'));
+            }
+            
+            // Apply probability coloring
+            probabilityMap.forEach((data, coords) => {
+                const [col, row] = coords.split(',').map(n => parseInt(n));
+                const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                
+                if (data.probability >= 80) {
+                    cell.classList.add('high-probability');
+                } else if (data.probability >= 60) {
+                    cell.classList.add('medium-probability');
+                } else if (data.probability >= 40) {
+                    cell.classList.add('low-probability');
+                } else if (data.probability >= 20) {
+                    cell.classList.add('very-low-probability');
+                }
+                
+                // Show probability percentage in high-probability cells
+                if (data.probability >= 60) {
+                    cell.textContent = Math.round(data.probability) + '%';
+                }
+            });
+            
+            // Mark reading points
+            [...readings.faint, ...readings.energy, ...readings.circular, ...readings.rapid].forEach(reading => {
+                const cell = document.querySelector(`[data-row="${reading.y}"][data-col="${reading.x}"]`);
+                if (cell) {
+                    cell.classList.add('reading-point');
+                    cell.textContent = '📍';
+                }
+            });
+            
+            // Mark confirmed water sources
+            readings.water.forEach(water => {
+                const cell = document.querySelector(`[data-row="${water.y}"][data-col="${water.x}"]`);
+                if (cell) {
+                    cell.classList.add('water-source');
+                    cell.textContent = '💧';
+                }
+            });
+            
+            // Mark predicted water sources (high probability areas)
+            const predictions = getPredictions();
+            predictions.slice(0, 3).forEach(pred => { // Top 3 predictions
+                if (pred.probability >= 70 && !readings.water.some(w => w.x === pred.x && w.y === pred.y)) {
+                    const cell = document.querySelector(`[data-row="${pred.y}"][data-col="${pred.x}"]`);
+                    if (cell) {
+                        cell.classList.add('predicted-water');
+                        cell.textContent = '🎯';
+                    }
+                }
+            });
+            
+            updatePredictionsList();
+            updateStats();
+        }
+        
+        function colorArea(centerX, centerY, minDist, maxDist, className) {
+            for (let row = 0; row < 20; row++) {
+                for (let col = 0; col < 20; col++) {
+                    const dist = getDistance(col, row, centerX, centerY);
+                    if (dist >= minDist && dist <= maxDist) {
+                        const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                        if (cell && !cell.classList.contains('reading-point')) {
+                            cell.classList.add(className);
+                        }
+                    }
+                }
+            }
+        }
+        
+        function getPredictions() {
+            const predictions = [];
+            probabilityMap.forEach((data, coords) => {
+                const [col, row] = coords.split(',').map(n => parseInt(n));
+                predictions.push({
+                    x: col,
+                    y: row,
+                    probability: data.probability,
+                    evidence: data.evidence
+                });
+            });
+            
+            return predictions.sort((a, b) => b.probability - a.probability);
+        }
+        
+        function updatePredictionsList() {
+            const predictions = getPredictions().slice(0, 10); // Top 10
+            const container = document.getElementById('predictions');
+            
+            if (predictions.length === 0) {
+                container.innerHTML = '<p>No predictions available. Add some readings!</p>';
+                return;
+            }
+            
+            container.innerHTML = predictions.map(pred => {
+                const confidence = pred.probability;
+                const level = confidence >= 80 ? 'high' : confidence >= 60 ? 'medium' : '';
+                const color = confidence >= 80 ? '#ff0000' : confidence >= 60 ? '#ff6600' : '#ffaa00';
+                
+                return `
+                    <div class="prediction-item ${level}">
+                        <strong>Position: (${pred.x + 1}, ${pred.y + 1})</strong><br>
+                        Confidence: ${confidence.toFixed(1)}%<br>
+                        Evidence Points: ${pred.evidence}
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: ${confidence}%; background-color: ${color};"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateStats() {
+            const predictions = getPredictions();
+            const highConfidence = predictions.filter(p => p.probability >= 80).length;
+            const mediumConfidence = predictions.filter(p => p.probability >= 60 && p.probability < 80).length;
+            const totalReadings = parseCoordinates(document.getElementById('reading1').value).length +
+                                parseCoordinates(document.getElementById('reading2').value).length +
+                                parseCoordinates(document.getElementById('reading3').value).length +
+                                parseCoordinates(document.getElementById('reading4').value).length;
+            
+            document.getElementById('statsContent').innerHTML = `
+                <div>Total Readings: ${totalReadings}</div>
+                <div>High Confidence Areas: ${highConfidence}</div>
+                <div>Medium Confidence Areas: ${mediumConfidence}</div>
+                <div>Best Prediction: ${predictions.length > 0 ? `(${predictions[0].x + 1}, ${predictions[0].y + 1}) - ${predictions[0].probability.toFixed(1)}%` : 'None'}</div>
+            `;
+        }
+        
+        function clearGrid() {
+            document.getElementById('reading1').value = '';
+            document.getElementById('reading2').value = '';
+            document.getElementById('reading3').value = '';
+            document.getElementById('reading4').value = '';
+            document.getElementById('waterSource').value = '';
+            
+            probabilityMap.clear();
+            
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.className = 'cell';
+                cell.style.backgroundColor = '';
+                cell.style.opacity = '';
+                cell.textContent = '';
+            });
+            
+            document.getElementById('coordinates').textContent = 'Click on a grid cell to see coordinates';
+            document.getElementById('predictions').innerHTML = '<p>Enter readings and click "Analyze & Update Grid" to see predictions.</p>';
+            document.getElementById('statsContent').innerHTML = 'No data yet';
+        }
+        
+        function addReading() {
+            addingMode = true;
+            alert('Click on a grid cell to add a reading at that location.');
+        }
+        
+        function toggleAreas() {
+            showAreas = !showAreas;
+            updateGrid();
+        }
+        
+        // Initialize the grid when page loads
+        window.onload = function() {
+            createGrid();
+        };
+    </script>
+</body>
+</html>
