@@ -473,7 +473,7 @@ for (i=0; i<LSACountInter.length; i++)
 
 function LSADrawTowers ()
 {
-	for (i=0;i<guard_towers.length; i++)
+		for (i=0;i<guard_towers.length; i++)
 	{
 		LSADrawline (guard_towers[i].x - 51,guard_towers[i].y - 51,guard_towers[i].x + 51,guard_towers[i].y - 51,"DodgerBlue");
 		LSADrawline (guard_towers[i].x + 51,guard_towers[i].y - 51,guard_towers[i].x + 51,guard_towers[i].y + 51,"DodgerBlue");
@@ -481,3 +481,27 @@ function LSADrawTowers ()
 		LSADrawline (guard_towers[i].x - 51,guard_towers[i].y + 51,guard_towers[i].x - 51,guard_towers[i].y - 51,"DodgerBlue");
 	}
 }
+
+function LSADrawLights ()
+{
+		for (i=0;i<poi.length; i++)
+	{
+		if(poi[i].name == "Altar of Three")
+			{
+				console.log("Altar of Three" , poi[i].name , i , poi[i].x , poi[i].y);
+				LSADrawline (poi[i].x - 151,poi[i].y - 151,poi[i].x + 151,poi[i].y - 151,"White");
+				LSADrawline (poi[i].x + 151,poi[i].y - 151,poi[i].x + 151,poi[i].y + 151,"White");
+				LSADrawline (poi[i].x + 151,poi[i].y + 151,poi[i].x - 151,poi[i].y + 151,"White");
+				LSADrawline (poi[i].x - 151,poi[i].y + 151,poi[i].x - 151,poi[i].y - 151,"White");
+			}
+		else if (poi[i].name == "Bone Altar")
+			{
+				console.log("Bone Altar" , poi[i].name , i , poi[i].x , poi[i].y);
+				LSADrawline (poi[i].x - 151,poi[i].y - 151,poi[i].x + 151,poi[i].y - 151,"Black");
+				LSADrawline (poi[i].x + 151,poi[i].y - 151,poi[i].x + 151,poi[i].y + 151,"Black");
+				LSADrawline (poi[i].x + 151,poi[i].y + 151,poi[i].x - 151,poi[i].y + 151,"Black");
+				LSADrawline (poi[i].x - 151,poi[i].y + 151,poi[i].x - 151,poi[i].y - 151,"Black");
+			}
+		
+	}
+}	

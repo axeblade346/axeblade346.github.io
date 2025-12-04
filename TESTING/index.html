@@ -26,10 +26,11 @@ Map : Infinity 4 &nbsp; &nbsp; &nbsp;LMA build : S1.0.4
         <input type="text" id="gpsstring" name="gpsstring"><br>
         <label for="eventstring">Event Message : </label><br>
         <input type="text" id="eventstring" name="eventstring"><br>
-        <button onclick="LSA(gpsstring.value,eventstring.value);document.getElementById('gpsstring').value ='';document.getElementById('eventstring').value ='';document.getElementById('LSARO').value ='';" ><b>Draw it</b></button>
+        <button onclick="LSA(gpsstring.value,eventstring.value);document.getElementById('gpsstring').value ='';document.getElementById('eventstring').value ='';document.getElementById('LSARO').value ='';" ><b>Draw Lootmap</b></button>
         &nbsp;&nbsp;&nbsp;
-        <button onclick="LSAClearFunc()" ><b>Clear</b></button><br>
-		<button onclick="LSADrawTowers(),toggle_markers('guard_towers')" ><b>Show Tower Zones</b></button><br>
+		<button onclick="LSADrawTowers()" ><b>Show Tower Zones</b></button><br>
+		<button onclick="LSADrawLights()")><b>Show Light No Deed Zone</b></button><br>
+		<button onclick="LSAClearFunc()" ><b>Clear ALL</b></button><br>
         <label for="LSAReporting">Reporting: </label><br>
         <label type="text" id="LSARO" name="LSARO"></label><br>
       </h6>
