@@ -1,6 +1,6 @@
-//  LSA 1.0.4
+//  LSA 1.0.5
 //  -- Wait for Danky to publish the Direction update of lootmaps before removing old code (lines 38 to 54)
-
+// Uncouple the Towers and Lights form the Lootmap storage
 
 var LSACountLine = [] ; //used to store  LSA Line draws
 var LSACountPoly = [] ; //used to store  LSA Poly draws
@@ -488,20 +488,23 @@ function LSADrawLights ()
 	{
 		if(poi[i].name == "Altar of Three")
 			{
-				console.log("Altar of Three" , poi[i].name , i , poi[i].x , poi[i].y);
-				LSADrawline (poi[i].x - 151,poi[i].y - 151,poi[i].x + 151,poi[i].y - 151,"White");
-				LSADrawline (poi[i].x + 151,poi[i].y - 151,poi[i].x + 151,poi[i].y + 151,"White");
-				LSADrawline (poi[i].x + 151,poi[i].y + 151,poi[i].x - 151,poi[i].y + 151,"White");
-				LSADrawline (poi[i].x - 151,poi[i].y + 151,poi[i].x - 151,poi[i].y - 151,"White");
+				console.log("Altar of Three" , poi[i].name , i , poi[i].x , poi[i].y);		
+				LSADrawline (poi[i].x - 21,poi[i].y - 21,poi[i].x + 21,poi[i].y - 21,"White");
+				LSADrawline (poi[i].x + 21,poi[i].y - 21,poi[i].x + 21,poi[i].y + 21,"White");
+				LSADrawline (poi[i].x + 21,poi[i].y + 21,poi[i].x - 21,poi[i].y + 21,"White");
+				LSADrawline (poi[i].x - 21,poi[i].y + 21,poi[i].x - 21,poi[i].y - 21,"White");
 			}
 		else if (poi[i].name == "Bone Altar")
 			{
 				console.log("Bone Altar" , poi[i].name , i , poi[i].x , poi[i].y);
-				LSADrawline (poi[i].x - 151,poi[i].y - 151,poi[i].x + 151,poi[i].y - 151,"Black");
-				LSADrawline (poi[i].x + 151,poi[i].y - 151,poi[i].x + 151,poi[i].y + 151,"Black");
-				LSADrawline (poi[i].x + 151,poi[i].y + 151,poi[i].x - 151,poi[i].y + 151,"Black");
-				LSADrawline (poi[i].x - 151,poi[i].y + 151,poi[i].x - 151,poi[i].y - 151,"Black");
+				LSADrawline (poi[i].x - 21,poi[i].y - 21,poi[i].x + 21,poi[i].y - 21,"Black");
+				LSADrawline (poi[i].x + 21,poi[i].y - 21,poi[i].x + 21,poi[i].y + 21,"Black");
+				LSADrawline (poi[i].x + 21,poi[i].y + 21,poi[i].x - 21,poi[i].y + 21,"Black");
+				LSADrawline (poi[i].x - 21,poi[i].y + 21,poi[i].x - 21,poi[i].y - 21,"Black");
+				
 			}
+		
+		
 		
 	}
 }	
