@@ -1,0 +1,10 @@
+var resources; resources =[
+{"type":"clay","x":"465","y":"1730","size":"small"},
+{"type":"tar","x":"465","y":"1728","size":"small"},
+
+{"type":"tar","x":"702","y":"1415","size":"small"},
+{"type":"sand","x":"787","y":"1448","size":"large"},
+
+
+{"x":"481","y":"1733","type":"mine","ores":["iron","copper","lead","zinc","silver","gold"],"features":["forge","large anvil"]},
+];
